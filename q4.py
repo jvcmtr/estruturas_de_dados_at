@@ -21,12 +21,12 @@ def dfs(graph, start):
     while len(to_see) > 0:
         node, path = to_see.pop() # operamos como uma pilha
         seen.append(node)
-        paths[node] = path
+        paths[node] = [*path, node]
 
         discovered = graph[node]
         to_see.extend([
             (x, [*path, node]) for x in discovered
-            if x not in seen
+            if x not in seen and x not in [x[0] for x in to_see ]
         ])
 
     return seen, paths
@@ -40,15 +40,13 @@ def bfs(graph, start):
         node, path = to_see[0] # operamos como uma fila
         to_see = to_see[1:]
         seen.append(node)
-        paths[node] = path
+        paths[node] = [*path, node]
 
         discovered = graph[node]
         to_see.extend([
             (x, [*path, node]) for x in discovered
-            if x not in paths
+            if x not in seen and x not in [x[0] for x in to_see ]
         ])
-        for d in discovered:
-            paths[d] = [*path, node] 
     return seen, paths
 
 
@@ -81,17 +79,17 @@ def main(g):
         if not distancias.get(l): distancias[l] = []
         distancias[l].append(k)
 
-    for i in range(1, maior+1):
+    for i in range(2, maior+1):
         print(f"      Distancia {i}: { ', '.join(distancias[i])}")
 
 
     print("______")
     print("Caminho Crítico de Dependência:")
     print(f"    Maior caminho linear: { ' => '.join(ccd)}")
-    print(f"    Caminhos relevantes (2 ou mais passos):")
+    print(f"    Caminhos relevantes (3 ou mais passos):")
     
     cam = [ v for v in dfs_paths.values() if len(v) > 2]
-    cam = sorted(cam, key=lambda i: len(cam), reverse=True)
+    cam = sorted(cam, key=lambda i: len(i), reverse=True)
     for cam in cam:
         print(f"        {' => '.join(cam)}")
 
