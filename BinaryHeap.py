@@ -22,6 +22,11 @@ class BinaryHeap:
         self.arr.append(val)
         self._heapify_up(self._get_last_idx())
 
+    def peek(self):
+        if not self.arr:
+            return None
+        return self.arr[0]
+
     def get_next(self):
         if not self.arr:
             return None
